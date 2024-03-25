@@ -24,14 +24,10 @@ public class UrlConstants {
 
     };
 
-//    public static final String[] ADMIN_ONLY_URLS = new String[]{
-//            "/api/v1/role/update",
-//            "api/v1/account/authorize",
-//            "api/v1/access/code/verify",
-//            "api/v1/access/code/approve",
-//            "api/v1/account/user/delete"
-//    };
-//
-//    public static final String ADMIN_AUTHORITY = "ADMIN";
+    public static final String[] ADMIN_ONLY_URLS = new String[]{
+
+    };
+
+    public static final String ADMIN_AUTHORITY = "ADMIN";
 
 }
