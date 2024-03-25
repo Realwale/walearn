@@ -1,7 +1,9 @@
 package com.walearn.platform.backend.users.service;
 
 
+import com.walearn.platform.backend.users.login.SignInCommand;
 import com.walearn.platform.backend.users.registration.UserRegistrationCommand;
+import com.walearn.platform.backend.users.request.SignInRequest;
 import com.walearn.platform.backend.users.request.SignUpRequest;
 import com.walearn.platform.backend.users.response.APIResponse;
 import lombok.RequiredArgsConstructor;
@@ -29,5 +31,20 @@ public class UserServiceImpl implements UserService{
                  .message("Account created successfully")
                  .data(commandGateway.sendAndWait(command))
                  .build();
+    }
+
+    @Override
+    public APIResponse signIn(SignInRequest signInRequest) {
+        SignInCommand command = SignInCommand
+                .builder()
+                .username(signInRequest.getUsername())
+                .password(signInRequest.getPassword())
+                .build();
+
+        return APIResponse.builder()
+                .status("SUCCESS")
+                .message("Sign-in successful")
+                .data(commandGateway.sendAndWait(command))
+                .build();
     }
 }
