@@ -5,6 +5,7 @@ import com.walearn.platform.backend.common.exception.UnprocessableEntityExceptio
 import com.walearn.platform.backend.security.JwtService;
 import com.walearn.platform.backend.users.Role;
 import com.walearn.platform.backend.users.UserRepository;
+import com.walearn.platform.backend.users.response.APIResponse;
 import lombok.RequiredArgsConstructor;
 
 import org.axonframework.commandhandling.CommandHandler;
@@ -42,7 +43,7 @@ public class SignInCommandHandler {
      */
     @CommandHandler
     @NonNull
-    public String handle(SignInCommand command) {
+    public APIResponse handle(SignInCommand command) {
         try {
             final Set<ConstraintViolation<SignInCommand>> violations = validator.validate(command);
             if (!violations.isEmpty()) {
@@ -50,7 +51,12 @@ public class SignInCommandHandler {
             }
 
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(command.getUsername(), command.getPassword()));
-            return jwtTokenProvider.createToken(command.getUsername(), Collections.singletonList(Role.from(repository.findByUsername(command.getUsername()).get().toDTO().getRole())));
+            String token = jwtTokenProvider.createToken(command.getUsername(), Collections.singletonList(Role.from(repository.findByUsername(command.getUsername()).get().toDTO().getRole())));
+            return APIResponse.builder()
+                    .status("SUCCESS")
+                    .message("Account created successfully")
+                    .data(token)
+                    .build();
         } catch (AuthenticationException e) {
             throw new UnprocessableEntityException("Invalid username/password");
         }

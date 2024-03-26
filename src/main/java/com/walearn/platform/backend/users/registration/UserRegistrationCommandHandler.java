@@ -8,6 +8,7 @@ import com.walearn.platform.backend.users.User;
 import com.walearn.platform.backend.users.UserDTO;
 import com.walearn.platform.backend.users.UserRepository;
 import com.walearn.platform.backend.users.event.UserCreatedIntegrationEvent;
+import com.walearn.platform.backend.users.response.APIResponse;
 import lombok.RequiredArgsConstructor;
 
 
@@ -50,7 +51,7 @@ public class UserRegistrationCommandHandler {
      */
     @CommandHandler
     @NonNull
-    public String handle(UserRegistrationCommand command) {
+    public APIResponse handle(UserRegistrationCommand command) {
         final User user = transactionTemplate.execute(transactionStatus -> {
             final Set<ConstraintViolation<UserRegistrationCommand>> violations = validator.validate(command);
             if (!violations.isEmpty()) {
@@ -69,6 +70,12 @@ public class UserRegistrationCommandHandler {
         final UserDTO dto = Objects.requireNonNull(user).toDTO();
         eventBus.publish(GenericEventMessage.asEventMessage(new UserCreatedIntegrationEvent(dto.getUsername(), dto.getEmail())));
 
-        return jwtTokenProvider.createToken(dto.getUsername(), Collections.singletonList(Role.from(dto.getRole())));
+        String token = jwtTokenProvider.createToken(dto.getUsername(), Collections.singletonList(Role.from(dto.getRole())));
+
+        return APIResponse.builder()
+                .status("SUCCESS")
+                .message("Account created successfully")
+                .data(token)
+                .build();
     }
 }
