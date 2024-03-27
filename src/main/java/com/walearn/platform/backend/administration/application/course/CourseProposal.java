@@ -4,6 +4,8 @@ package com.walearn.platform.backend.administration.application.course;
 
 import com.walearn.platform.backend.administration.application.course.create.CreateCourseProposalCommand;
 import com.walearn.platform.backend.common.domain.AggregateRoot;
+import com.walearn.platform.backend.common.exception.CourseProposalAlreadyApprovedException;
+import com.walearn.platform.backend.common.exception.CourseProposalAlreadyDeclinedException;
 import jakarta.persistence.*;
 import java.util.UUID;
 

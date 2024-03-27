@@ -2,8 +2,8 @@ package com.walearn.platform.backend.administration.web.course;
 
 
 
-import com.walearn.platform.backend.administration.application.course.CourseProposalAlreadyApprovedException;
-import com.walearn.platform.backend.administration.application.course.CourseProposalAlreadyDeclinedException;
+import com.walearn.platform.backend.common.exception.CourseProposalAlreadyApprovedException;
+import com.walearn.platform.backend.common.exception.CourseProposalAlreadyDeclinedException;
 import com.walearn.platform.backend.administration.application.course.CourseProposalDTO;
 import com.walearn.platform.backend.administration.application.course.approve.ApproveCourseProposalCommand;
 import com.walearn.platform.backend.administration.application.course.decline.DeclineCourseProposalCommand;
@@ -49,7 +49,8 @@ public class CourseProposalController {
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	public List<CourseProposalDTO> courseProposals() {
-		return queryGateway.query(new ListCourseProposalsQuery(), ResponseTypes.multipleInstancesOf(CourseProposalDTO.class)).join();
+		return queryGateway.query(new ListCourseProposalsQuery(),
+				ResponseTypes.multipleInstancesOf(CourseProposalDTO.class)).join();
 	}
 
 	@ExceptionHandler({ CourseProposalAlreadyDeclinedException.class, CourseProposalAlreadyApprovedException.class })

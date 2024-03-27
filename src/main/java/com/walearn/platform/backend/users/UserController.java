@@ -10,6 +10,8 @@ import jakarta.validation.Valid;
 
 
 import org.axonframework.commandhandling.gateway.CommandGateway;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,7 +31,7 @@ public class UserController {
 	private final CommandGateway commandGateway;
 
 	@PostMapping("/sign-up")
-	public APIResponse signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
+	public ResponseEntity<APIResponse> signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
 		UserRegistrationCommand command = UserRegistrationCommand
 				.builder()
 				.role(signUpRequest.getRole())
@@ -38,17 +40,19 @@ public class UserController {
 				.password(signUpRequest.getPassword())
 				.build();
 
-		return commandGateway.sendAndWait(command);
+		APIResponse response = commandGateway.sendAndWait(command);
+		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 
 	@PostMapping("/sign-in")
-	public APIResponse signIn(@Valid @RequestBody SignInRequest signInRequest) {
+	public ResponseEntity<APIResponse> signIn(@Valid @RequestBody SignInRequest signInRequest) {
 		SignInCommand command = SignInCommand
 				.builder()
 				.username(signInRequest.getUsername())
 				.password(signInRequest.getPassword())
 				.build();
 
-		return commandGateway.sendAndWait(command);
+		APIResponse response = commandGateway.sendAndWait(command);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 }

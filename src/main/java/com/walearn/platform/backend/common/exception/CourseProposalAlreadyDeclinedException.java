@@ -1,4 +1,4 @@
-package com.walearn.platform.backend.administration.application.course;
+package com.walearn.platform.backend.common.exception;
 
 import java.util.UUID;
 
