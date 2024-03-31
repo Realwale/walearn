@@ -1,0 +1,32 @@
+package com.walearn.platform.backend.courses.course;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import com.walearn.platform.backend.courses.course.create.CreateQuizCommand;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToMany;
+
+
+
+@Entity
+@DiscriminatorValue("Quiz")
+public class Quiz extends CurriculumItem {
+
+	@OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private List<Question> questions;
+
+	// for JPA
+	protected Quiz() {
+		super();
+	}
+
+	public Quiz(CreateQuizCommand command, Integer serialNumber, Course course) {
+		super(command.getTitle(), command.getDescription(), course, serialNumber);
+		this.questions = command.getQuestions().stream().map(questionCommand -> new Question(questionCommand.getContent(), this)).collect(Collectors.toList());
+	}
+}
+
